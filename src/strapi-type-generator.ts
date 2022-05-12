@@ -1,5 +1,6 @@
 import { Attribute, Content, ContentType, Field } from './types/content';
 import fs from 'fs';
+import { promisify } from 'util';
 import { deCapitalize } from './helpers';
 import { EntityCalssData, GenerateOptions, StrapiKey } from './types/generator';
 
@@ -8,48 +9,54 @@ export class StrapiTypeGenerator {
 
   constructor(private keys: StrapiKey[], private contents: ContentType, private options: GenerateOptions) {}
 
-  public generate = () => {
-    let printString = '';
+  public generate = (): Promise<boolean> => {
+    return new Promise<boolean>((resolve, reject) => {
+      let printString = '';
 
-    /// Generating the Key Types Begins here
-    this.keys.forEach((key) => {
-      printString = `${printString}${this.generateStringType(key.name, key.data)} \n\n`;
-    });
+      /// Generating the Key Types Begins here
+      this.keys.forEach((key) => {
+        printString = `${printString}${this.generateStringType(key.name, key.data)} \n\n`;
+      });
 
-    this.keys.forEach((key) => {
-      if (key.name === 'ComponentKeys' || key.name === 'ContentKeys') {
-        /// Generating the Content Types Begins here
-        key.data.forEach((k) => {
-          const content = this.contents[k];
-          const { globalId, uid } = content;
-          this.entityClassData.push({ globalId, uid });
-          try {
-            printString = `${printString}${this.generateType(content)} \n\n`;
-          } catch (error) {
-            if (error) {
-              // eslint-disable-next-line no-console
-              console.log(error);
+      /// Generating the Content Types Begins here
+      this.keys.forEach((key) => {
+        if (key.name === 'ComponentKeys' || key.name === 'ContentKeys') {
+          key.data.forEach((k) => {
+            const content = this.contents[k];
+            const { globalId, uid } = content;
+            this.entityClassData.push({ globalId, uid });
+            try {
+              printString = `${printString}${this.generateType(content)} \n\n`;
+            } catch (error) {
+              if (error) {
+                // eslint-disable-next-line no-console
+                console.log(error);
+              }
             }
-          }
-        });
+          });
+        }
+      });
+      try {
+        this.createFile(this.options.path ? `${this.options.path}/strapi-types.ts` : `./strapi-types.ts`, printString);
+        if (this?.options?.generateEntityClass) {
+          this.createFile(
+            this.options.path ? `${this.options.path}/strapi-entity.ts` : `./strapi-entity.ts`,
+            this.createEntityClass()
+          );
+        }
+      } catch (error) {
+        reject(error);
       }
-    });
 
-    this.createFile(this.options.path ? `${this.options.path}/strapi-types.ts` : `./strapi-types.ts`, printString);
-    if (this?.options?.generateEntityClass) {
-      this.createFile(
-        this.options.path ? `${this.options.path}/strapi-entity.ts` : `./strapi-entity.ts`,
-        this.createEntityClass()
-      );
-    }
+      resolve(true);
+    });
   };
 
-  private createFile = (filename: string, data: string) => {
-    fs.writeFile(filename, data, (err) => {
-      if (err) throw err;
-      // eslint-disable-next-line no-console
-      console.log(`${filename} Created ✨`);
-    });
+  private createFile = async (filename: string, data: string) => {
+    const writeFile = promisify(fs.writeFile);
+    await writeFile(filename, data);
+    // eslint-disable-next-line no-console
+    console.log(`${filename} Created ✨`);
   };
 
   private generateType = (content: Content) => {
@@ -202,7 +209,7 @@ export class StrapiTypeGenerator {
         }
 
         if (field.relation === 'morphToMany') {
-          suffix = `any /// Morph To Many Relation need To find a optimal solution`;
+          suffix = `any /// [Morph To Many Relation] - Needs To find an optimal solution`;
         }
 
         return `${prefix}${suffix}`;

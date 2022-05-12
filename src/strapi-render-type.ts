@@ -11,7 +11,7 @@ const strapi = require('@strapi/strapi');
 const keys: Array<any> = [];
 const contents: Array<any> = [];
 
-const main = async () => {
+const render = async () => {
   return new Promise<void>(async (resolve) => {
     const app = await strapi().register();
     const ContentKeys = await app.container.get('content-types').keys();
@@ -42,21 +42,13 @@ const main = async () => {
   });
 };
 
-export const generateTypes = (options?: GenerateOptions): Promise<void> => {
+export const generateTypes = async (options?: GenerateOptions): Promise<boolean> => {
   const defaultOptions: GenerateOptions = {
     generateEntityClass: false,
     ...options,
   };
-
-  return new Promise<void>((resolve, reject) => {
-    main().then(() => {
-      try {
-        const builder = new StrapiTypeGenerator(keys, contents[0], defaultOptions);
-        builder.generate();
-        resolve();
-      } catch (error) {
-        if (error) reject(error);
-      }
-    });
-  });
+  await render();
+  const builder = new StrapiTypeGenerator(keys, contents[0], defaultOptions);
+  const res = await builder.generate();
+  return Promise.resolve(res);
 };
