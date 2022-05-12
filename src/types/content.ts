@@ -53,6 +53,7 @@ type ContentInfo = {
 };
 
 type FieldType =
+  | 'float'
   | 'string'
   | 'boolean'
   | 'time'

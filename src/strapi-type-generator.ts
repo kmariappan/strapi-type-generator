@@ -155,6 +155,8 @@ export class StrapiTypeGenerator {
         return 'number';
       case 'decimal':
         return 'number';
+      case 'float':
+        return 'number';
       case 'text':
         return 'string';
       case 'richtext':
