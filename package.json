@@ -20,7 +20,7 @@
   },
   "scripts": {
     "build": "npm run clean && rollup -c",
-    "dev": "nodemon --config nodemon.json src/example/play.ts",
+    "dev": "nodemon --config nodemon.json example/play.ts",
     "clean": "rm -rf dist",
     "lint": "eslint  . --ext .ts",
     "prettier-format": "prettier --config .prettierrc 'src/**/*.ts' --write",
