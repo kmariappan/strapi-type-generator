@@ -37,10 +37,13 @@ export class StrapiTypeGenerator {
         }
       });
       try {
-        this.createFile(this.options.path ? `${this.options.path}/strapi-types.ts` : `./strapi-types.ts`, printString);
+        this.createFile(
+          this.options.path ? `${this.options.path}/strapi-generated-types.ts` : `./strapi-generated-types.ts`,
+          printString
+        );
         if (this?.options?.generateEntityClass) {
           this.createFile(
-            this.options.path ? `${this.options.path}/strapi-entity.ts` : `./strapi-entity.ts`,
+            this.options.path ? `${this.options.path}/strapi-generated-entity.ts` : `./strapi-generated-entity.ts`,
             this.createEntityClass()
           );
         }
@@ -98,7 +101,7 @@ export class StrapiTypeGenerator {
     items.forEach((item, index) => {
       manipulatedImportStatement = `${manipulatedImportStatement}${index === 0 ? '' : '\n'}import { ${
         item.globalId
-      } } from './strapi-types'; `;
+      } } from './strapi-generated-types'; `;
     });
 
     return manipulatedImportStatement;
@@ -130,7 +133,7 @@ export class StrapiTypeGenerator {
 
   private createEntityClass(): string {
     return `import { AxiosInstance } from 'axios';
-    import { StrapiEntityServiceApi } from '../strapi-entity-service-api';
+    import { StrapiEntityServiceApi } from './base/strapi-entity-service-api';
     ${this.getImports(this.entityClassData)}
     
     export class StrapiEntity {
