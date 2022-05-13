@@ -6,7 +6,7 @@ const STRAPI_ADMIN_BACKEND_URL = process.env.STRAPI_ADMIN_BACKEND_URL as string;
 
 const { entity } = new StrapiToolkit();
 const toolkit = new StrapiToolkit(getAxiosInstance(`${STRAPI_ADMIN_BACKEND_URL}/toolkit`, strapiLoggedInAdminToken));
-const contens = toolkit.entity;
+const contents = toolkit.entity;
 
 export * from './lib/strapi-generated-types';
-export { contens, entity };
+export { contents, entity };
