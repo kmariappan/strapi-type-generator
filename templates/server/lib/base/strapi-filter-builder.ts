@@ -1,19 +1,22 @@
 /* eslint-disable no-console */
 import { AxiosInstance } from 'axios';
+import { parse } from 'qs';
 import { generateQueryString, generateQueryFromRawString, stringToArray } from '../helpers';
 import { StrapiClientHelper } from './strapi-client-helper';
 import { InferedTypeFromArray, PublicationState } from '../types/base';
-import { EntityResponse } from '../types/content';
+import { EntityAbstractServiceType, EntityResponse } from '../types/content';
 import { CrudSorting, PopulateDeepOptions, RelationalFilterOperators } from '../types/crud';
 
 export class StrapiFilterBuilder<T> extends StrapiClientHelper<T> {
   private httpClient?: AxiosInstance;
+  private uid: string;
 
-  constructor(url: string, axiosInstance?: AxiosInstance) {
+  constructor(url: string, uid: string, axiosInstance?: AxiosInstance, private strapiInstance?: any) {
     super(url);
 
     this.url = url;
     this.httpClient = axiosInstance;
+    this.uid = uid;
   }
 
   public get(): Promise<EntityResponse<T>> {
@@ -27,8 +30,21 @@ export class StrapiFilterBuilder<T> extends StrapiClientHelper<T> {
           .catch((err: EntityResponse<T>) => {
             resolve(err);
           });
+      } else {
+        this.getEntityAbstractService()
+          .findMany(this.uid, parse(this.url.split('?')[1]))
+          .then((res) => {
+            resolve(res);
+          })
+          .catch((err: EntityResponse<T>) => {
+            resolve(err);
+          });
       }
     });
+  }
+
+  private getEntityAbstractService(): EntityAbstractServiceType<T> {
+    return this.strapiInstance.plugin('toolkit').service('entityAbstractService');
   }
 
   equalTo(field: keyof InferedTypeFromArray<T>, value: string | number) {

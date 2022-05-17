@@ -111,3 +111,12 @@ export type EntityResponse<T> = {
   data: T | null;
   error: string | null;
 };
+
+export type EntityAbstractServiceType<T> = {
+  getWelcomeMessage: () => string;
+  findMany: (collectionName: string, options?: object) => Promise<EntityResponse<T>>;
+  findOne: (collectionName: string, id: string | number, options: object) => Promise<EntityResponse<T>>;
+  create: (collectionName: string, values: any) => Promise<EntityResponse<T>>;
+  update: (collectionName: string, id: string | number, values: object) => Promise<EntityResponse<T>>;
+  delete: (collectionName: string, id: string | number) => Promise<EntityResponse<T>>;
+};

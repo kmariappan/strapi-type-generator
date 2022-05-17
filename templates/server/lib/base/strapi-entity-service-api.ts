@@ -6,7 +6,8 @@ import { EntityResponse } from '../types/content';
 /* eslint-disable no-console */
 export class StrapiEntityServiceApi<T> {
   private url: string;
-  constructor(private uid: string, private httpClient?: AxiosInstance) {
+
+  constructor(private uid: string, private httpClient?: AxiosInstance, private strapiInstance?: any) {
     this.url = `entity/${uid}`;
   }
 
@@ -24,7 +25,7 @@ export class StrapiEntityServiceApi<T> {
       const queryString = generateQueryString(query);
       this.url = `${this.url}?${queryString}`;
     }
-    return new StrapiFilterBuilder<T[]>(this.url, this.httpClient);
+    return new StrapiFilterBuilder<T[]>(this.url, this.uid, this.httpClient, this.strapiInstance);
   }
 
   public findOne(id: string | number): Promise<EntityResponse<T>> {

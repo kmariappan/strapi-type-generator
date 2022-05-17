@@ -48,29 +48,38 @@ export class StrapiEntity {
   componentSharedRichText: StrapiEntityServiceApi<ComponentSharedRichText>;
   componentSharedSeo: StrapiEntityServiceApi<ComponentSharedSeo>;
   componentSharedSlider: StrapiEntityServiceApi<ComponentSharedSlider>;
-  constructor(private httpClient?: AxiosInstance) {
-    this.adminPermission = new StrapiEntityServiceApi('admin::permission', this.httpClient);
-    this.adminUser = new StrapiEntityServiceApi('admin::user', this.httpClient);
-    this.adminRole = new StrapiEntityServiceApi('admin::role', this.httpClient);
-    this.adminApiToken = new StrapiEntityServiceApi('admin::api-token', this.httpClient);
-    this.uploadFile = new StrapiEntityServiceApi('plugin::upload.file', this.httpClient);
-    this.i18NLocale = new StrapiEntityServiceApi('plugin::i18n.locale', this.httpClient);
+  constructor(private httpClient?: AxiosInstance, private strapiInstance?: any) {
+    this.adminPermission = new StrapiEntityServiceApi('admin::permission', this.httpClient, this.strapiInstance);
+    this.adminUser = new StrapiEntityServiceApi('admin::user', this.httpClient, this.strapiInstance);
+    this.adminRole = new StrapiEntityServiceApi('admin::role', this.httpClient, this.strapiInstance);
+    this.adminApiToken = new StrapiEntityServiceApi('admin::api-token', this.httpClient, this.strapiInstance);
+    this.uploadFile = new StrapiEntityServiceApi('plugin::upload.file', this.httpClient, this.strapiInstance);
+    this.i18NLocale = new StrapiEntityServiceApi('plugin::i18n.locale', this.httpClient, this.strapiInstance);
     this.usersPermissionsPermission = new StrapiEntityServiceApi(
       'plugin::users-permissions.permission',
-      this.httpClient
+      this.httpClient,
+      this.strapiInstance
     );
-    this.usersPermissionsRole = new StrapiEntityServiceApi('plugin::users-permissions.role', this.httpClient);
-    this.usersPermissionsUser = new StrapiEntityServiceApi('plugin::users-permissions.user', this.httpClient);
-    this.about = new StrapiEntityServiceApi('api::about.about', this.httpClient);
-    this.article = new StrapiEntityServiceApi('api::article.article', this.httpClient);
-    this.author = new StrapiEntityServiceApi('api::author.author', this.httpClient);
-    this.category = new StrapiEntityServiceApi('api::category.category', this.httpClient);
-    this.global = new StrapiEntityServiceApi('api::global.global', this.httpClient);
-    this.componentSharedMedia = new StrapiEntityServiceApi('shared.media', this.httpClient);
-    this.componentSharedNetwork = new StrapiEntityServiceApi('shared.network', this.httpClient);
-    this.componentSharedQuote = new StrapiEntityServiceApi('shared.quote', this.httpClient);
-    this.componentSharedRichText = new StrapiEntityServiceApi('shared.rich-text', this.httpClient);
-    this.componentSharedSeo = new StrapiEntityServiceApi('shared.seo', this.httpClient);
-    this.componentSharedSlider = new StrapiEntityServiceApi('shared.slider', this.httpClient);
+    this.usersPermissionsRole = new StrapiEntityServiceApi(
+      'plugin::users-permissions.role',
+      this.httpClient,
+      this.strapiInstance
+    );
+    this.usersPermissionsUser = new StrapiEntityServiceApi(
+      'plugin::users-permissions.user',
+      this.httpClient,
+      this.strapiInstance
+    );
+    this.about = new StrapiEntityServiceApi('api::about.about', this.httpClient, this.strapiInstance);
+    this.article = new StrapiEntityServiceApi('api::article.article', this.httpClient, this.strapiInstance);
+    this.author = new StrapiEntityServiceApi('api::author.author', this.httpClient, this.strapiInstance);
+    this.category = new StrapiEntityServiceApi('api::category.category', this.httpClient, this.strapiInstance);
+    this.global = new StrapiEntityServiceApi('api::global.global', this.httpClient, this.strapiInstance);
+    this.componentSharedMedia = new StrapiEntityServiceApi('shared.media', this.httpClient, this.strapiInstance);
+    this.componentSharedNetwork = new StrapiEntityServiceApi('shared.network', this.httpClient, this.strapiInstance);
+    this.componentSharedQuote = new StrapiEntityServiceApi('shared.quote', this.httpClient, this.strapiInstance);
+    this.componentSharedRichText = new StrapiEntityServiceApi('shared.rich-text', this.httpClient, this.strapiInstance);
+    this.componentSharedSeo = new StrapiEntityServiceApi('shared.seo', this.httpClient, this.strapiInstance);
+    this.componentSharedSlider = new StrapiEntityServiceApi('shared.slider', this.httpClient, this.strapiInstance);
   }
 }
