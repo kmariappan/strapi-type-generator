@@ -1,7 +1,7 @@
 import { AxiosInstance } from 'axios';
 import { generateQueryString } from '../helpers';
 import { StrapiFilterBuilder } from './strapi-filter-builder';
-import { EntityResponse } from '../types/content';
+import { Content, ContentType, EntityResponse } from '../types/content';
 
 /* eslint-disable no-console */
 export class StrapiEntityServiceApi<T> {
@@ -90,5 +90,14 @@ export class StrapiEntityServiceApi<T> {
 
   public getUid(): string {
     return this.uid;
+  }
+
+  public async getSchema(): Promise<Content> {
+    const contentTypes = await this.strapiInstance.container.get('content-types').getAll();
+    const components = this.strapiInstance.components;
+
+    const contentTypesAndComponents: ContentType = { ...contentTypes, ...components };
+
+    return contentTypesAndComponents[this.uid] as Content;
   }
 }
