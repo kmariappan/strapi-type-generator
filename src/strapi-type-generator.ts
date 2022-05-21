@@ -125,7 +125,7 @@ export class StrapiTypeGenerator {
     items.forEach((item, index) => {
       manipulatedImportStatement = `${manipulatedImportStatement}${index === 0 ? '' : '\n'}this.${deCapitalize(
         item.globalId
-      )} = new StrapiEntityServiceApi('${item.uid}', this.httpClient);`;
+      )} = new StrapiEntityServiceApi('${item.uid}', this.httpClient, this.strapiInstance);`;
     });
 
     return manipulatedImportStatement;
@@ -138,7 +138,7 @@ export class StrapiTypeGenerator {
     
     export class StrapiEntity {
       ${this.getDeclerations(this.entityClassData)}
-      constructor(private httpClient?: AxiosInstance) {
+      constructor(private httpClient?: AxiosInstance, private strapiInstance?: any) {
         ${this.getInstantiations(this.entityClassData)}
       }
     }
