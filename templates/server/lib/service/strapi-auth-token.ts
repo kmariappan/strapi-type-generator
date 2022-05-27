@@ -2,4 +2,4 @@
 // @ts-ignore
 import { auth } from '@strapi/helper-plugin';
 
-export { auth as strapiLoggedInAdminToken };
+export const authToken = auth.getToken();
